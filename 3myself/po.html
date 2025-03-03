@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Slider</title>
+  <style>
+    body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; font-family: Arial, sans-serif; }
+    .slider-container { position: relative; height: 100vh; width: 100vw; background: url('bg real.png') center/cover no-repeat; }
+    .slider-image { max-height: 80%; border-radius: 20px; display: block; margin: 0 auto; }
+    .nav-button { position: absolute; top: 50%; transform: translateY(-50%); font-size: 3rem; color: rgb(23, 233, 23); background: none; border: none; cursor: pointer; }
+    .nav-button:hover { color: #ccc; }
+    .left-button { left: 10px; }
+    .right-button { right: 10px; }
+    .next-button { display: none; position: fixed; bottom: 10px; right: 10px; padding: 20px 40px; font-size: 1.5rem; background: #007bff; color: white; border: none; border-radius: 10px; cursor: pointer; }
+    .next-button.show { display: block; }
+    .next-button:hover { background: #0056b3; }
+  .dots-container { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; }
+    .dot { width: 15px; height: 15px; border-radius: 50%; background: #ccc; cursor: pointer; }
+    .dot.active { background: #007bff; } 
+</style>
+</head>
+<body>
+  <div class="slider-container">
+    <button class="nav-button left-button" onclick="prevSlide()">&#9664;</button>
+    <img id="slider-image" class="slider-image" src="แนะนำตัวละคร.png" alt="Slide">
+    <button class="nav-button right-button" onclick="nextSlide()">&#9654;</button>
+    <a id="next-button" class="next-button" href="/เลือกด่าน/ของจริง.html">กดเพื่อไปต่อ</a> <!-- ลิงก์ไปยังหน้าถัดไป -->
+  </div>
+  <script>
+    const images = ['แนะนำตัวละคร.png', 'บัตรปชช.png'];
+    let currentIndex = 0;
+
+    function showSlide(index) {
+      const imageElement = document.getElementById('slider-image');
+      imageElement.src = images[index];
+    }
+
+    function nextSlide() {
+      currentIndex = (currentIndex + 1) % images.length;
+      showSlide(currentIndex);
+    }
+
+    function prevSlide() {
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      showSlide(currentIndex);
+    }
+
+    setTimeout(() => {
+      const nextButton = document.getElementById('next-button');
+      nextButton.classList.add('show');
+    }, 5000);
+  </script>
+    <div class="dots-container">
+    </div>
+
+    <script>
+      function updateDots() {
+        images.forEach((_, index) => {
+          const dot = document.getElementById(`dot-${index}`);
+          if (index === currentIndex) {
+            dot.classList.add('active');
+          } else {
+            dot.classList.remove('active');
+          }
+        });
+      }
+
+      const originalShowSlide = showSlide;
+      showSlide = (index) => {
+        originalShowSlide(index);
+        updateDots();
+      }
+
+      window.onload = updateDots;
+      window.onload = () => {
+  const dotsContainer = document.querySelector('.dots-container');
+  images.forEach((_, index) => {
+    const dot = document.createElement('span');
+    dot.classList.add('dot');
+    dot.id = `dot-${index}`;
+    dot.addEventListener('click', () => {
+      currentIndex = index;
+      showSlide(currentIndex);
+    });
+    dotsContainer.appendChild(dot);
+  });
+  updateDots();
+};
+
+    </script>
+</body>
+</html>

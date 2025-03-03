@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Game Simulation</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('line.png') no-repeat center center;
+            background-size: 100% 100%;
+            overflow: hidden;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 70vh;
+            background: #8dabd8;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-box {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            scrollbar-width: thin;
+            scrollbar-color: #bbbbbb #8dabd8;
+        }
+        .chat-box::-webkit-scrollbar {
+            width: 8px;
+        }
+        .chat-box::-webkit-scrollbar-thumb {
+            background-color: #bbbbbb;
+            border-radius: 4px;
+        }
+        .chat-box::-webkit-scrollbar-track {
+            background: #8dabd8;
+        }
+        .message {
+            padding: 10px 15px;
+            border-radius: 18px;
+            background: #f8f9fa;
+            width: fit-content;
+            max-width: 80%;
+            position: relative;
+            font-size: 18px;
+            line-height: 1.4;
+            word-wrap: break-word;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .received {
+            background: #f8f9fa;
+            color: #000; 
+            align-self: flex-start;
+            border-radius: 10px 10px 10px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .received:after {
+            content: '';
+            position: absolute;
+            left: -10px;
+            bottom: 0;
+            border-top: 10px solid #f8f9fa;
+            border-right: 10px solid transparent;
+        }
+        .sent {
+            background: #9de693;
+            color: #000000;
+            align-self: flex-end;
+            border-radius: 10px 10px 0 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .name {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 3px;
+        }
+        .time {
+            font-size: 11px;
+            color: #999;
+            text-align: right;
+            margin-top: 5px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .options button {
+            background: #ffeb99;
+            border: none;
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+            margin: 5px 0;
+            text-align: center;
+            font-size: 18px;
+        }
+        .options button:hover {
+            background: #ffd966;
+        }
+        .special-end-btn {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #ff4444;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    display: none; /* ซ่อนไว้ก่อน */
+}
+
+.special-end-btn:hover {
+    background: #cc0000;
+}
+
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+      <div class="chat-box" id="chat-box"></div>
+      <div class="options" id="options"></div>
+      <button id="special-end" class="special-end-btn">จบเกมแบบพิเศษ</button>
+  </div>
+</body>
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        const options = document.getElementById('options');
+
+        const messages = [
+            "สวัสดีครับคุณลินลดา ผมพลตํารวจเอก ประมวล ประจําอยู่สน. (เขต) นะครับขออนุญาตยืนยันข้อมูลอีกทีนะครับ คุณลินลดา วงศ์สุวรรณ อายุ 54 ปี อาศัยอยู่ที่บ้านเลขที่ 15/7",
+            "เลขบัตรประชาชน 10963 8527 41 1",
+            "ถูกอ้างว่ามีส่วนเกี่ยวข้องกับผู้ต้ องหาในคดีฟอกเงิน โดยมีหมายเลขบัญชี 000-1111-113 ที่ถูก อ้างว่าเป็นบัญชีม้าสำหรับรับเงินของผู้ต้องหาคดี ",
+            "ข้อมูลตามนี้ถูกต้องไหมครับ"
+        ];
+
+        let messageIndex = 0; 
+
+        function showTypingEffect(callback) {
+            const typingMessage = document.createElement('div');
+            typingMessage.classList.add('message');
+            chatBox.appendChild(typingMessage);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            let dots = "";
+            const interval = setInterval(() => {
+                dots = dots.length < 3 ? dots + "." : "";
+                typingMessage.innerText = "กำลังพิมพ์" + dots;
+            }, 500);
+
+            setTimeout(() => {
+                clearInterval(interval);
+                callback(typingMessage);
+            }, Math.random() * 2000 + 1000);
+        }
+
+        function showMessage() {
+            if (messageIndex < messages.length) {
+                showTypingEffect((typingMessage) => {
+                    typingMessage.innerText = messages[messageIndex]; 
+                    typingMessage.classList.remove("typing");
+                    messageIndex++;
+                    showMessage();
+                });
+            } else {    
+                showInitialOptions();                 
+            }
+        } 
+
+        const conversationFlow = {
+            'ก็ถูกหมดเลยจ้ะ แต่บัญชีธนาคารของฉันไม่ใช่บัญชีม้าอย่างที่เจ้าหน้าที่บอกนะ ในบัญชีก็มีแค่เงินของฉันอยู่ไม่กี่บาทเอง': { 
+                message: 'คือ ณ ตอนนี้เจ้าหน้าที่จะต้องทําการระงับบัญชีของคุณลินลดาไว้ก่อนจนกว่าจะเสร็จสิ้นการทําคดีและตามจับตัวคนร้ายได้ จนถึงตอนนั้นบัญชีคุณลินลดาถึงจะสามารถใช้งานได้ปกตินะครับ',
+                options: ['แล้วฉันจะใช้เงินยังไงล่ะเจ้าหน้าที่ ฉันถอนเงินมาใช้แค่ 500 เอง อีกอย่างกว่าลูกสาวฉันจะกลับมาก็อาทิตย์หน้าเลย แล้วยายแก่ๆอย่างฉันจะทํายังไง']
+            },
+            'แล้วฉันจะใช้เงินยังไงล่ะเจ้าหน้าที่ ฉันถอนเงินมาใช้แค่ 500 เอง อีกอย่างกว่าลูกสาวฉันจะกลับมาก็อาทิตย์หน้าเลย แล้วยายแก่ๆอย่างฉันจะทํายังไง': {
+                message: 'ถ้าหากว่าคุณลินลดาไม่อยากให้บัญชีของคุณถูกระงับ ทางเจ้าหน้าที่มีอีกหนึ่งทางเลือกให้ เดี๋ยวทางเราจะจัดเตรียมหาทนายส่วนตัวมาให้กับคุณลินลดาเพื่อแก้ต่างในการมีส่วนเกี่ยวข้องในคดีนี้',
+                options: ['เเล้วฉันต้องทำยังไงจ๊ะ',] 
+            },    
+            'เเล้วฉันต้องทำยังไงจ๊ะ': {   
+                message: 'แต่ทางคุณลินลดาจะต้องโอนเงินให้กับเจ้าหน้าที่จํานวน 2 แสนบาท มาที่บัญชี 222-4533-777 ไทยพาณิชย์ เป็นค่าจัดหาทนาย แบบเร่งด่วนให้',
+                options: ['ถ้าฉันโอนเงินให้ตอนนี้ บัญชีธนาคารของฉันจะไม่ถูกระงับใช่ไหม',]
+            },
+            'ถ้าฉันโอนเงินให้ตอนนี้ บัญชีธนาคารของฉันจะไม่ถูกระงับใช่ไหม': {
+                message: 'ใช่ครับ แต่ถ้าไม่โอนในตอนนี้ เดี๋ยวอีกประมาณ 5 นาที ทางเจ้าหน้าที่จะทําการระงับบัญชีธนาคารของคุณลินลดาครับ เพราะฉะนั้นรีบ ๆ ตัดสินใจนะครับ',
+                options: ['โอนเงิน','ยังไม่โอนเงิน']
+            },
+            'โอนเงิน': { 
+                message: 'เดี๋ยวทางเจ้าหน้าที่จะรีบจัดเตรีย มหาทนายให้คุณลินลดานะครับ ถ้ามีความคืบหน้าอย่างไร เดี๋ยวทางเจ้าหน้าที่จะติดต่อกลับมาอีกที ขอบคุณที่ให้ความร่วมมือครับ',
+                options: ['ฉันโอนเงินเรียบร้อยแล้วจ๊ะ','เดี๋ยวฉันขอโทรปรึกษาลูกสาวก่อนนะ']
+            },
+            'เดี๋ยวฉันขอโทรปรึกษาลูกสาวก่อนนะ': {  
+                message: 'ทางเจ้าหน้าที่ต้องขอรบกวนไม่ให้ คุณลินลดาเปิดเผยข้อมูลคดีกับ บุคคลอื่นนะครับ ไม่อย่างนั้นคุณลินลดา อาจจะได้ข้อหาเพิ่มจากการเผยแ พร่ข้อมูลลัพพติหน้าที่นะครับ',
+                options: ['ฉันคุยปรึกษากับคนในครอบครัวของฉันไม่ได้เลยเหรอ']
+            },
+            'ฉันคุยปรึกษากับคนในครอบครัวของฉันไม่ได้เลยเหรอ': {  
+                message: 'ไม่ได้ครับ เพราะข้อมูลในส่วนนี้เป็นข้อมูลที่ยังไม่เปิดเผยสู่สาธารณะชน หากมีประชาชนคนอื่นทราบข้อมูลในส่วนนี้จะถูกตั้งข้อหาด้วยนะครับ',
+                options: ['โอนเงิน','ปฏิเสธที่จะโอนเงิน']
+            },
+            'ปฏิเสธที่จะ': {  
+                message: 'ทางเจ้าหน้าที่ต้องขอรบกวนไม่ให้ คุณลินลดาเปิดเผยข้อมูลคดีกับ บุคคลอื่นนะครับ ไม่อย่างนั้นคุณลินลดา อาจจะได้ข้อหาเพิ่มจากการเผยแ พร่ข้อมูลลัพพติหน้าที่นะครับ',
+                options: ['ฉันคุยปรึกษากับคนในครอบครัวของฉันไม่ได้เลยเหรอ']
+            },
+            'ฉันโอนเงินเรียบร้อยแล้วจ๊ะ': { 
+            message: 'ขอบคุณที่ให้ความร่วมมือค่ะ',
+            options: [],
+            end: true,
+            nextPage: 'addline.html'
+            },
+            'ปฏิเสธที่จะโอนเงิน': { 
+            message: '.....',
+            options: [],
+            end: true,
+            nextPage: ''
+            },
+        };
+
+        function selectOption(choice) {
+    const userMessage = document.createElement('div');
+    userMessage.classList.add('message', 'sent');
+    userMessage.innerText = choice;
+    chatBox.appendChild(userMessage);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    options.innerHTML = '';
+    options.style.display = 'none';
+
+    function selectOption(choice) {
+    const userMessage = document.createElement('div');
+    userMessage.classList.add('message', 'sent');
+    userMessage.innerText = choice;
+    chatBox.appendChild(userMessage);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    options.innerHTML = '';
+    options.style.display = 'none';
+
+    showTypingEffect((typingMessage) => {
+        typingMessage.innerText = conversationFlow[choice].message;
+        typingMessage.classList.remove("typing");
+
+        if (conversationFlow[choice].options.length > 0) {
+            options.innerHTML = '';
+            conversationFlow[choice].options.forEach(option => {
+                const button = document.createElement('button');
+                button.innerText = option;
+                button.onclick = () => selectOption(option);
+                options.appendChild(button);
+            });
+            options.style.display = 'flex';
+        } else if (conversationFlow[choice].end) {
+            window.location.href = conversationFlow[choice].nextPage;
+        }
+
+        // ถ้าผู้เล่นเลือก "ปฏิเสธที่จะโอนเงิน"
+        if (choice === "ปฏิเสธที่จะโอนเงิน") {
+            rejectedTransfer = true;
+            document.getElementById('special-end').style.display = 'block'; // แสดงปุ่ม "จบเกมแบบพิเศษ"
+            checkSpecialEnding(); // เช็คว่ากดครบ 2 ปุ่มหรือยัง
+        }
+    });
+}
+    showTypingEffect((typingMessage) => {
+        typingMessage.innerText = conversationFlow[choice].message;
+        typingMessage.classList.remove("typing");
+
+        if (conversationFlow[choice].options.length > 0) {
+            options.innerHTML = '';
+            conversationFlow[choice].options.forEach(option => {
+                const button = document.createElement('button');
+                button.innerText = option;
+                button.onclick = () => selectOption(option);
+                options.appendChild(button);
+            });
+            options.style.display = 'flex';
+        } else if (conversationFlow[choice].end) {
+            window.location.href = conversationFlow[choice].nextPage;
+        }
+    });
+}
+
+        function showInitialOptions() {
+            options.innerHTML = '';
+            ['ก็ถูกหมดเลยจ้ะ แต่บัญชีธนาคารของฉันไม่ใช่บัญชีม้าอย่างที่เจ้าหน้าที่บอกนะ ในบัญชีก็มีแค่เงินของฉันอยู่ไม่กี่บาทเอง' ].forEach(option => {
+                const button = document.createElement('button');
+                button.innerText = option;
+                button.onclick = () => selectOption(option);
+                options.appendChild(button);
+            });
+            options.style.display = 'flex';
+        }
+        function scrollToBottom() {
+            var chatBox = document.getElementById("chat-box");
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function addMessage(text, type) {
+            var chatBox = document.getElementById("chat-box");
+            var message = document.createElement("div");
+            message.classList.add("message", type);
+            message.textContent = text;
+            chatBox.appendChild(message);
+            scrollToBottom();
+        }
+
+        showMessage();
+    </script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สนับสนุนโครงการ</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0D2A43;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            position: relative;
+            flex-direction: column;
+        }
+        .container {
+            width: 100%;
+            padding: 20px;
+        }
+        .qr-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        img {
+            width: 90vw;
+            height: auto;
+            max-width: 600px;
+            border-radius: 10px;
+        }
+        .account-info {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #FFD700;
+        }
+        .animated-text {
+            display: inline-block;
+            overflow: hidden;
+            white-space: pre-line;
+            border-right: 3px solid white;
+            font-size: 24px;
+            min-height: 50px;
+        }
+        .close-button {
+            margin-top: 20px;
+            font-size: 18px;
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="animated-text" id="animated-text"></h2>
+        <p><strong>โปรไฟล์ของตำรวจคนนั้น</strong></p>
+        <div class="qr-container">
+            <img src="ทรศ.png" alt="QR Code">
+        </div>
+        <div class="account-info"></div>
+    </div>
+    <a class="close-button" href="ferm.html">กดเพื่อไปต่อ</a>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const text = "หลังจากจบบทสนทนากับเจ้าหน้าที่ DSI คุณยายก็กดเข้าไปในแอพลิเคชั่นไลน์ตามที่เจ้าหน้าที่บอก\nและพบกับแอคเคาน์ที่ของตํารวจทักข้อความมา";
+            let index = 0;
+            function typeEffect() {
+                if (index < text.length) {
+                    document.getElementById("animated-text").innerHTML += text.charAt(index);
+                    index++;
+                    setTimeout(typeEffect, 100);
+                } else {
+                    document.getElementById("animated-text").style.borderRight = "none";
+                }
+            }
+            typeEffect();
+        });
+    </script>
+</body>
+</html>

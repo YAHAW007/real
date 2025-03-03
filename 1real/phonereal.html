@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>นิทานเสียงแบบมีทางเลือก</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('/1real/Bg-01.jpg') no-repeat center center/cover;
+            overflow: hidden;
+        }
+            #phone-container {
+    width: 100vw;
+    height: 100vh;
+    background: url('/1real/โทรศัพท์/11.png') no-repeat center center/cover;
+    border-radius: 0; /* ลบเส้นขอบโค้ง (ถ้าไม่ต้องการ) */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0; /* ลบ padding (ถ้าไม่ต้องการ) */
+}
+        #timer {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -1100%);
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 5px;
+        }
+        #overlay {
+            position: absolute;
+            bottom: 60px;
+            width: 40%;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            display: none;
+            border-radius: 15px 15px 15px 15px; /* เพิ่มค่านี้ */
+            border-bottom-left-radius: 25px; /* เพิ่มค่านี้ */
+            border-bottom-right-radius: 25px; /* เพิ่มค่านี้ */
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transform: translateY(0%);
+        }
+
+        .choice {
+            margin: 10px auto;
+            padding: 20px 40px; /* ปรับ padding ให้ใหญ่ขึ้น */
+            font-size: 20px; /* ปรับขนาดตัวอักษรให้ใหญ่ขึ้น */
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 75%;
+            opacity: 0;
+            transition: opacity 0.8s, transform 0.5s;
+            border-radius: 25px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transform: translateY(10px);
+        }
+
+        .choice:hover {
+            background: linear-gradient(135deg, #2575fc, #6a11cb);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+        .popup-button {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 15px 25px;
+            background: linear-gradient(45deg, #00bcd4, #3f51b5);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        /* เอฟเฟกต์ตอนเมาส์ชี้ */
+        .popup-button:hover {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(45deg, #3f51b5, #00bcd4);
+        }
+
+        /* กล่อง Pop-up */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .popup-content {
+            position: relative;
+            max-width: 80%;
+            max-height: 80%;
+        }
+
+        .popup-content img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        /* ปุ่มปิดแบบ Overlay */
+        .close-button {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: rgba(255, 255, 255, 0.8);
+            color: #333;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            font-size: 20px;
+        }
+
+        .close-button:hover {
+            background: #ff4d4d;
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        /* เอฟเฟกต์เฟดอิน */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="phone-container">
+        <div id="timer">00:00</div>
+        <audio id="audio"></audio>
+        <div id="overlay">
+            <button class="choice" id="choice1"></button>
+            <button class="choice" id="choice2"></button>
+        </div>
+    </div>
+    <button class="popup-button" onclick="openPopup()">ดูบัตรประชาชน</button>
+
+    <!-- Pop-up Overlay -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-content">
+            <button class="close-button" onclick="closePopup()">×</button>
+            <img src="/3myself/บัตรปชช.png" alt="Pop-up Image">
+        </div>
+    </div>
+    <script>
+        const storyData = {
+            start: {
+                audio: "เสียงแก้/t/1.MP3",
+                choices: [{ text: "ใช่จ้า นี่ใครจ๊ะ", nextScene: "r2" }]
+            },
+            r2: {
+                audio: "เสียงแก้/t/2.MP3",
+                choices: [{ text: "ถูกจ้ะ แล้วมีปัญหาอะไรหรือเปล่าจ๊ะ ทําไมถึงมีเจ้าหน้าที่ติดต่อฉันมา”", nextScene: "r3" }]
+            },
+            r3: {
+                audio: "เสียงแก้/t/3.MP3",
+                choices: [{ text: "สอบสวน? สอบสวนอะไรล่ะ", nextScene: "r3" }]
+            },
+            r4: {
+                audio: "เสียงแก้/t/4.MP3",
+                choices: [{ text: "ฉันไปวันอาทิตย์ได้ไหมเจ้าหน้าที่", nextScene: "r4" }]
+            },
+            r5: {
+                audio: "เสียงแก้/t/5.MP3",
+                choices: [
+                    { text: "ได้จ๊ะ ได้ๆๆ ยายจะปฏิเสธเจ้าหน้าที่ได้ด้วยเรอะ", nextScene: "r6" },
+                    { text: "เดี๋ยวไว้ลูกสาวฉันกลับมา", nextScene: "r5x1" }
+                ],
+                autoChoiceIndex: 1
+            },
+            r5x1: {
+                audio: "เสียงแก้/t/13.mp3",
+                choices: [
+                    { text: "ก็บอกแล้วไงว่าเดี๋ยวรอลูกสาวกลับมาก่อน เดี๋ยวฉันจะให้ลูกสาวพาไป", nextScene: "r5x2" },
+                ],
+            },
+            r5x2: {
+                audio: "เสียงแก้/t/14.mp3",
+                choices: [
+                    { text: "ก็ได้ๆ แล้วฉันต้องทํายังไงบ้างล่ะ", nextScene: "r5x3" },
+                    { text: "ถ้าฉันมีความผิดจริงก็ไปตัด สินความผิดกันในชั้นศาล เลย ฉันมีเงินจ้างทนาย (วางสาย)", nextScene: "endgood" }
+                ],
+            },
+            r5x3: {
+                audio: "เสียงแก้/t/15.mp3",
+                choices: [
+                    { text: "จ้าๆ", nextScene: "line" },
+                ],
+            },
+            r6: {
+                audio: "เสียงแก้/t/6.MP3",
+                choices: [
+                    { text: "ใช่จ้า ตามเบอร์นี้เลย", nextScene: "r7" },
+                ],
+            },
+            r7: {
+                audio: "เสียงแก้/t/7.MP3",
+                choices: [
+                    { text: "คุณเจ้าหน้าที่ ฉันขอถามอะไรหน่อยได้ไหมจ๊ะ", nextScene: "r8" },
+                ],
+            },
+            r8: {
+                audio: "เสียงแก้/t/8.MP3",
+                choices: [
+                    { text: "ปกติแล้วถ้ามีคดีอะไรแบบนี้เจ้าหน้าที่จะโทรมาหาโดยตรงแบบนี้เลยเหรอจ๊ะ", nextScene: "r9" },
+                ],
+            },
+            r9: {
+                audio: "เสียงแก้/t/9.MP3",
+                choices: [
+                    { text: "อ้อ เป็นแบบนี้นี่เอง ฉันก็กลัวว่าจะเป็นพวกแก๊งคอลเซ็นเตอร์โทรมาหลอกซะอีก", nextScene: "r10" },
+                ],
+            },
+            r10: {
+                audio: "เสียงแก้/t/10.MP3",
+                choices: [
+                    { text: "ช่างมันก็ได้จ้ะ เดี๋ยวจะเสียเวลา", nextScene: "r11" },
+                    { text: "ถ้างั้นฉันขอชื่อเจ้าหน้าที่ที่ติดต่อมาด้วยนะจ๊ะ", nextScene: "r10x1" }
+                ],
+            },
+            r10x1: {
+                audio: "เสียงแก้/t/11x.MP3",
+                choices: [
+                    { text: "จ้าๆ", nextScene: "line" },
+                ],
+            },
+            r11: {
+                audio: "เสียงแก้/t/11.MP3",
+                choices: [
+                    { text: "จ้าๆ", nextScene: "line" },
+                ],
+            },
+            r11x1: {
+                audio: "เสียงแก้/t/8.MP3",
+                choices: [
+                    { text: "คุณเจ้าหน้าที่ ฉันขอถามอะไรหน่อยได้ไหมจ๊ะ", nextScene: "r9" },
+                ],
+            },
+            endgood: {
+                audio: "เสียงแก้/t/endgood.mp3",
+                choices: [],
+            },
+            line: {
+                audio: "เสียงแก้/t/endgood.mp3",
+                choices: [],
+            }
+        };    
+
+        let currentScene = "start";
+        const audio = document.getElementById("audio");
+        const overlay = document.getElementById("overlay");
+        const choiceButtons = [
+            document.getElementById("choice1"),
+            document.getElementById("choice2")
+        ];
+        let timeoutHandler;
+
+        window.onload = () => {
+            updateScene(currentScene);
+        };
+
+
+        function updateScene(sceneKey) {
+    let scene = storyData[sceneKey];
+    if (!scene) return;
+
+    // ตรวจสอบถ้าเป็นฉากจบ ให้เปลี่ยนหน้า
+    if (sceneKey === "line") {
+        window.location.href = "line/addline.html"; // เปลี่ยนเป็นหน้าที่ต้องการ
+        return;
+    } else if (sceneKey === "endgood") {
+        window.location.href = "/Ending 4 scene/endgood.html"; // เปลี่ยนเป็นหน้าที่ต้องการ
+        return;
+    }
+
+    audio.src = scene.audio;
+    audio.play();
+    overlay.style.display = "none";
+    choiceButtons.forEach(button => button.style.display = "none");
+
+    audio.onended = () => {
+        if (!scene.choices || scene.choices.length === 0) return;
+        overlay.style.display = "block";
+
+        scene.choices.forEach((choice, index) => {
+            choiceButtons[index].innerText = choice.text;
+            choiceButtons[index].onclick = () => choosePath(choice.nextScene);
+            choiceButtons[index].style.display = "block";
+            setTimeout(() => {
+                choiceButtons[index].style.opacity = "1";
+                choiceButtons[index].style.transform = "translateY(0)";
+            }, 500 * (index + 1));
+        });
+
+        if (scene.autoChoiceIndex !== undefined) {
+            timeoutHandler = setTimeout(() => {
+                choosePath(scene.choices[scene.autoChoiceIndex].nextScene);
+            }, 5000);
+        }
+    };
+}
+
+
+        function choosePath(nextScene) {
+            clearTimeout(timeoutHandler);
+            overlay.style.display = "none";
+            updateScene(nextScene);
+        }
+
+        let seconds = 0;
+        function updateTimer() {
+            let minutes = Math.floor(seconds / 60);
+            let secs = seconds % 60;
+            document.getElementById("timer").textContent = 
+                (minutes < 10 ? "0" : "") + minutes + ":" + 
+                (secs < 10 ? "0" : "") + secs;
+            seconds++;
+        }
+        setInterval(updateTimer, 1000);
+         function openPopup() {
+            document.getElementById('popupOverlay').style.display = 'flex';
+        }
+
+        // ฟังก์ชันปิด Pop-up
+        function closePopup() {
+            document.getElementById('popupOverlay').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

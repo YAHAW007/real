@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trigger Warning</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: #e1e1e1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            cursor: pointer; /* เปลี่ยนเคอร์เซอร์ให้ชัดเจนว่าเป็นคลิกได้ */
+        }
+        .warning-icon {
+            font-size: 5rem;
+            color: #f4d03f;
+        }
+        .title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #f4d03f;
+            margin: 10px 0;
+        }
+        .description {
+            font-size: 1.2rem;
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        .footer {
+            position: absolute;
+            bottom: 20px;
+            font-size: 0.9rem;
+        }
+        .footer a {
+            color: #4e9cff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="warning-icon">⚠️</div>
+        <div class="title">Trigger Warning</div>
+        <div class="description">
+            การหลอกหลวง, การจำลอง<br>
+            <small>คำเตือน: เป็นการจำลองจากสถานการณ์ที่เคยเกิดไม่ได้มีการหลอกหลวงอาจอย่างใด</small>
+        </div>
+        <div class="des">ทั้งนี้หากเคยเจอสถานการณ์เเบบนี้หรือได้รับความเดือดร้อน สามารถโทรได้ที่ ศูนย์ปฏิบัติการแก้ไขปัญหาอาชญากรรมออนไลน์ (AOC) สายด่วน 1441</div>
+    </div>
+    <div class="footer">
+        <a href="#support">ร่วมสนับสนุนโปรเจกต์</a>
+        <a href="#about">เกี่ยวกับงาน</a>
+        <a href="#credits">เครดิต</a>
+    </div>
+
+    <script>
+        // ทำให้คลิกที่หน้าจอส่วนใดก็ได้พาไปยังหน้าถัดไป
+        document.body.addEventListener('click', function() {
+            window.location.href = "/3myself/po.html"; 
+        });z
+    </script>
+</body>
+</html>

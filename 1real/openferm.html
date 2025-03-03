@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จำลองโทรศัพท์</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('/1real/Bg-01.jpg') no-repeat center center/cover;
+            overflow: hidden;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .call-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .caller-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 5px solid white;
+            margin-bottom: 10px;
+            background: url('profile.png') center/cover;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        }
+        .call-alert {
+            font-size: 24px;
+            font-weight: bold;
+            animation: blink 1s infinite alternate;
+            margin-bottom: 10px;
+        }
+        @keyframes blink {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        .call-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+        }
+        .call-buttons a {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            color: white;
+        }
+        .accept {
+            background: green;
+        }
+        .decline {
+            background: red;
+        }
+        .volume-control {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 10px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .volume-icon {
+            cursor: pointer;
+        }
+        input[type="range"] {
+            accent-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <div class="call-screen" id="callScreen">
+        <div class="caller-img"></div>
+        <h2 class="call-alert">📞 มีสายเรียกเข้า...</h2>
+        <div id="phone-number"></div>
+        <div class="call-buttons">
+            <a href="ferm.html" class="accept">รับสาย</a>
+            <a href="Ending 4 scene/4.html" class="decline">ตัดสาย</a>
+        </div>
+    </div>
+    <div class="container">
+        <img src="/1real/โทรศัพท์/7.png" alt="Centered Image">
+    </div>
+    <audio id="bg-music" loop autoplay>
+        <source src="birds.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <audio id="ringtone" src="discord.mp3"></audio>
+    <div class="volume-control">
+        <span id="volume-icon" class="volume-icon">🔊</span>
+        <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.3">
+    </div>
+    <script>
+        const bgMusic = document.getElementById("bg-music");
+        const ringtone = document.getElementById("ringtone");
+        const phoneNumberElement = document.getElementById("phone-number");
+        const volumeSlider = document.getElementById("volume-slider");
+        const volumeIcon = document.getElementById("volume-icon");
+        let isMuted = false;
+
+        bgMusic.volume = 0.3;
+
+        function simulateCall() {
+            document.getElementById("callScreen").style.display = "flex";
+            bgMusic.pause();
+            ringtone.play();
+            phoneNumberElement.textContent = generateRandomPhoneNumber();
+        }
+
+        function generateRandomPhoneNumber() {
+            const prefix = "+66";
+            let number = "";
+            
+            for (let i = 0; i < 7; i++) {
+                number += Math.floor(Math.random() * 10);
+            }
+            
+            return `เบอร์: ${prefix}-${number.slice(0, 3)}-${number.slice(3)}`;
+        }
+
+        volumeSlider.addEventListener("input", function() {
+            bgMusic.volume = volumeSlider.value;
+            if (volumeSlider.value == 0) {
+                volumeIcon.textContent = "🔇";
+            } else {
+                volumeIcon.textContent = "🔊";
+            }
+        });
+
+        volumeIcon.addEventListener("click", function() {
+            isMuted = !isMuted;
+            bgMusic.muted = isMuted;
+            volumeIcon.textContent = isMuted ? "🔇" : "🔊";
+            volumeSlider.value = isMuted ? 0 : bgMusic.volume;
+        });
+
+        setTimeout(simulateCall, 5000);
+    </script>
+</body>
+</html>

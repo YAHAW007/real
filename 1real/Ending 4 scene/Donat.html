@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สนับสนุนโครงการ</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0D2A43;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            position: relative;
+        }
+        .container {
+            max-width: 500px;
+            padding: 20px;
+        }
+        .close-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+        }
+        .qr-container {
+            background: white;
+            padding: 10px;
+            display: inline-block;
+            border-radius: 10px;
+        }
+        img {
+            width: 200px;
+            height: 200px;
+        }
+        .account-info {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #FFD700;
+        }
+    </style>
+</head>
+<body>
+    <button class="close-button" onclick="goBack()">&times;</button>
+    <div class="container">
+        <h2>ร่วมสนับสนุนโปรเจกต์</h2>
+        <p>ขอบคุณสำหรับการสนับสนุน </p>
+        <p><strong>สามารถสนับสนุนได้ผ่านช่องทางดังนี้</strong></p>
+        <div class="qr-container">
+        </div>
+        <div class="account-info">
+            <p><strong>ชื่อบัญชี:</strong> ศุภพล เล็กเจริญรัตน์</p>
+            <p><strong>เลขบัญชี:</strong>  (SCB)</p>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

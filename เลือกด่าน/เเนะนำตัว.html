@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Effect</title>
+    <style>
+        body {
+            font-family: "Arial", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('Bg/background1.png') no-repeat center center/cover;
+            overflow: hidden;
+        }
+        .container {
+            max-width: 1000px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            position: absolute;
+            top: 50%;
+            left: 65%;
+            transform: translateX(-50%);
+        }
+        .typing-text {
+            font-size: 20px;
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+        .next-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #007bff, #00d4ff);
+            color:  white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 30px;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        .next-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>บทนำ</h2>
+        <p id="typing" class="typing-text"></p>
+    </div>
+    <button class="next-button" onclick="nextPage()">ถัดไป →</button>
+
+    <script>
+        const text = `ในช่วงสัปดาห์นี้คุณยายจะต้องอยู่บ้านคนเดียวเป็นเวลา 1 อาทิตย์
+เนื่องจากลูกสาวได้ลาพักร้อนเพื่อไปเที่ยวต่างประเทศกับสามีและ
+ลูกอีก 2 คนจึงทำให้คุณยายที่ไม่ชอบเดินทางไกลต้องอยู่บ้านเพียงลำพัง 
+และต้องพบเจอกับเหตุการณ์ที่เกือบจะทำให้คุณยายสูญเสียเงิน
+มูลค่าหลายแสนบาทให้กับมิจฉาชีพที่แฝงตัวมาหลอกลวงคุณยาย`;
+        let index = 0;
+        function typeEffect() {
+            if (index < text.length) {
+                document.getElementById("typing").innerHTML += text.charAt(index);
+                index++;
+                setTimeout(typeEffect, 50);
+            } else {
+                document.querySelector(".next-button").style.display = "block";
+            }
+        }
+        function nextPage() {
+            window.location.href='/1real/phonereal.html'
+        }
+        window.onload = typeEffect;
+    </script>
+</body>
+</html>

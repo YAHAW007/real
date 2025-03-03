@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Effect</title>
+    <style>
+        body {
+            font-family: "Arial", sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('Bg/background1.png') no-repeat center center/cover;
+            overflow: hidden;
+        }
+        .container {
+            max-width: 1000px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            position: absolute;
+            top: 50%;
+            left: 65%;
+            transform: translateX(-50%);
+        }
+        .typing-text {
+            font-size: 20px;
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+        .next-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #007bff, #00d4ff);
+            color:  white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 30px;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        .next-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+         /* สไตล์ของกล่องควบคุมเสียง */
+         .audio-control {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(30, 30, 30, 0.9);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        #toggle-sound {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+        
+        #toggle-sound:hover {
+            transform: scale(1.2);
+        }
+        
+        /* สไตล์ของแถบควบคุมระดับเสียง */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 120px;
+            height: 5px;
+            background: #ddd;
+            border-radius: 5px;
+            outline: none;
+            transition: background 0.3s;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #ffcc00;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        input[type="range"]:hover {
+            background: #bbb;
+        }
+        .close-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- เล่นเพลงพื้นหลังแบบวนซ้ำ -->
+    <audio id="bg-music" loop autoplay>
+        <source src="/1real/birds.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <button class="close-button" onclick="goBack()">&times;</button>
+    <!-- ควบคุมเสียง -->
+    <div class="audio-control">
+        <button id="toggle-sound">🔊</button>
+        <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.3">
+    </div>
+    <div class="container">
+        <h2>บทนำ</h2>
+        <p id="typing" class="typing-text"></p>
+    </div>
+    <button class="next-button" onclick="nextPage()">ถัดไป →</button>
+
+    <script>
+        const text = `ในช่วงสัปดาห์นี้คุณยายจะต้องอยู่บ้านคนเดียวเป็นเวลา 1 อาทิตย์
+เนื่องจากลูกสาวได้ลาพักร้อนเพื่อไปเที่ยวต่างประเทศกับสามีและ
+ลูกอีก 2 คนจึงทำให้คุณยายที่ไม่ชอบเดินทางไกลต้องอยู่บ้านเพียงลำพัง 
+และต้องพบเจอกับเหตุการณ์ที่เกือบจะทำให้คุณยายสูญเสียเงิน
+มูลค่าหลายแสนบาทให้กับมิจฉาชีพที่แฝงตัวมาหลอกลวงคุณยาย`;
+        let index = 0;
+        function typeEffect() {
+            if (index < text.length) {
+                document.getElementById("typing").innerHTML += text.charAt(index);
+                index++;
+                setTimeout(typeEffect, 50);
+            } else {
+                document.querySelector(".next-button").style.display = "block";
+            }
+        }
+        function nextPage() {
+            window.location.href='/1real/celling.html'
+        }
+        function goBack() {
+            window.history.back();
+        }
+        window.onload = typeEffect;
+        // ฟังก์ชันควบคุมเสียง
+        const audio = document.getElementById("bg-music");
+            const toggleButton = document.getElementById("toggle-sound");
+            const volumeSlider = document.getElementById("volume-slider");
+            audio.volume = 0.3;
+            
+            toggleButton.addEventListener("click", function() {
+                if (audio.paused) {
+                    audio.play();
+                    toggleButton.textContent = "🔊";
+                } else {
+                    audio.pause();
+                    toggleButton.textContent = "🔇";
+                }
+            });
+            
+            volumeSlider.addEventListener("input", function() {
+                audio.volume = volumeSlider.value;
+            });
+    </script>
+</body>
+</html>

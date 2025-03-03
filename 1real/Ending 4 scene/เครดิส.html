@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เกี่ยวกับงาน</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex justify-center items-center min-h-screen bg-[#0D2B45] text-white">
+
+    <!-- กล่องเนื้อหาแบบเต็มจอ -->
+    <div class="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center bg-white/10 backdrop-blur-lg p-8 text-center">
+
+        <!-- ปุ่มปิด (กากบาท) -->
+        <button onclick="goBack()" 
+            class="absolute top-4 left-4 text-white text-4xl hover:text-gray-300 transition">
+            ✖
+        </button>
+
+        <!-- หัวข้อ -->
+        <h2 class="text-5xl font-bold mb-8">เครดิต</h2>
+
+        <!-- เนื้อหา -->
+        <p class="text-gray-200 text-2xl max-w-3xl leading-relaxed">
+            <span class="text-yellow-300 font-bold">CODE</span> นาย ศุภพล เล็กเจริญรัตน์<br>
+            <span class="text-yellow-300 font-bold">กราฟิก</span> นาย พฤฒิพงศ์ ทองอุ่น<br>
+            <span class="text-yellow-300 font-bold">บทเนื้อเรื่อง</span> นางสาว อรยา เรียงแก้ว <br>
+            <span class="text-yellow-300 font-bold">โครงเรื่อง</span> นาย ณัฐวุฒิ เอี่ยมสอาด
+        </p>
+        <!-- คำเตือน -->
+        <p class="mt-8 text-yellow-400 text-3xl font-semibold">
+            ⚠ โปรดหยุดเล่นทันที หรือปรึกษาสายด่วนสุขภาพจิต (โทร. 1323)
+        </p>
+
+        <!-- แคปชันด้านล่าง -->
+        <p class="mt-12 text-gray-400 text-lg">
+            "SCAMER" | interactive GameWebsite Project
+        </p>
+
+    </div>
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+
+</body>
+</html>

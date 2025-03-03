@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จำลองโทรศัพท์</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('/1real/Bg-01.jpg') no-repeat center center/cover;
+            overflow: hidden;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* เต็มหน้าจอ */
+        }
+        .call-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .call-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 20px;
+        }
+        .call-buttons a {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            text-decoration: none;
+            color: white;
+        }
+        .accept {
+            background: green;
+        }
+        .decline {
+            background: red;
+        }
+        .caller-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+            background: url('1real/IMG_2790.PNG') center/cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="/1real/โทรศัพท์/7.png" alt="Centered Image">
+    </div>
+    
+</div>
+
+<!-- หน้าจอโทรเข้า -->
+<div class="call-screen" id="callScreen">
+    <div class="caller-img"></div>
+    <h2>📞 มีสายเรียกเข้า...</h2>
+    <div id="phone-number"></div>
+    <div class="call-buttons">
+        <a href="ferm.html" class="accept" onclick="acceptCall()">รับสาย</a>
+        <a href="Ending 4 scene/4.html" class="decline" onclick="declineCall()">ตัดสาย</a>
+    </div>
+</div>
+
+<script>
+    setTimeout(simulateCall, 5000);
+
+    function simulateCall() {
+        document.getElementById("callScreen").style.display = "flex";
+    }
+
+    function acceptCall() {
+        document.getElementById("callScreen").style.display = "none";
+        startStory();
+    }
+
+    function declineCall() {
+        document.getElementById("callScreen").style.display = "none";
+    }
+    function generateRandomPhoneNumber() {
+            const prefix = "+66";
+            let number = "";
+            
+            for (let i = 0; i < 7; i++) {
+                number += Math.floor(Math.random() * 10);
+            }
+            
+            return `<p>เบอร์: ${prefix}-${number.slice(0, 3)}-${number.slice(3)}</p>`;
+        }
+
+        document.getElementById("phone-number").innerHTML = generateRandomPhoneNumber();
+</script>
+
+</body>
+</html>

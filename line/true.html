@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>หน้ากรอกข้อมูล</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: url('ปลอม2.png') no-repeat center center;
+            background-size: 100% 100%;
+            overflow: hidden;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            width: 350px;
+            text-align: center;
+            position: absolute;
+            top: 62%;
+            left: 55%;
+            transform: translate(-50%, -50%);
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        label {
+            font-weight: 600;
+            display: block;
+            margin: 10px 0 5px;
+            text-align: left;
+            color: #555;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+        input:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 8px rgba(102, 126, 234, 0.5);
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #5645a2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>กรอกข้อมูล</h2>
+        <form id="infoForm">
+            <label>ชื่อ-นามสกุล:</label>
+            <input type="text" id="fullname" required>
+
+            <label>หมายเลขโทรศัพท์:</label>
+            <input type="tel" id="phone" required>
+
+            <label>เลขบัตรประชาชน:</label>
+            <input type="text" id="idcard" required>
+
+            <label>เลขหลังบัตรประชาชน:</label>
+            <input type="text" id="backidcard" required>
+
+            <label>ที่อยู่:</label>
+            <input type="text" id="address" required>
+
+            <button type="submit">ถัดไป</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("infoForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            alert("ข้อมูลถูกส่งเรียบร้อย!");
+            window.location.href = "ไปต่อ.html"
+        });
+    </script>
+</body>
+</html>

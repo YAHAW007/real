@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สนับสนุนโครงการ</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0D2A43;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            position: relative;
+            flex-direction: column;
+        }
+        .container {
+            width: 100%;
+            padding: 20px;
+        }
+        .qr-container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+        img {
+            width: 90vw;
+            height: auto;
+            max-width: 600px;
+            border-radius: 10px;
+        }
+        .account-info {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #FFD700;
+        }
+        .animated-text {
+            display: inline-block;
+            overflow: hidden;
+            white-space: pre-line;
+            border-right: 3px solid white;
+            font-size: 24px;
+            min-height: 50px;
+        }
+        .close-button {
+            margin-top: 20px;
+            font-size: 18px;
+            color: white;
+            text-decoration: none;
+        }
+        .audio-control {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(30, 30, 30, 0.9);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        #toggle-sound {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        #toggle-sound:hover {
+            transform: scale(1.2);
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 120px;
+            height: 5px;
+            background: #ddd;
+            border-radius: 5px;
+            outline: none;
+            transition: background 0.3s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 15px;
+            height: 15px;
+            background: #ffcc00;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        input[type="range"]:hover {
+            background: #bbb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2 class="animated-text" id="animated-text"></h2>
+        </div>
+        <div class="account-info"></div>
+    </div>
+    <audio id="bg-music">
+        <source src="/1real/เสียงแก้/sounds/computer-keyboard-typing-290582.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <div class="audio-control">
+        <button id="toggle-sound">🔊</button>
+        <input type="range" id="volume-slider" min="0" max="1" step="0.1" value="0.3">
+    </div>
+
+    <a class="close-button" href="/line/sms 1.html">กดเพื่อไปต่อ</a>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const text = "022111111 ได้ส่งข้อความมา";
+            let index = 0;
+            function typeEffect() {
+                if (index < text.length) {
+                    document.getElementById("animated-text").innerHTML += text.charAt(index);
+                    index++;
+                    setTimeout(typeEffect, 100);
+                } else {
+                    document.getElementById("animated-text").style.borderRight = "none";
+                }
+            }
+            typeEffect();
+        });
+        const audio = document.getElementById("bg-music");
+        const toggleButton = document.getElementById("toggle-sound");
+        const volumeSlider = document.getElementById("volume-slider");
+        audio.volume = 0.3;
+
+        toggleButton.addEventListener("click", function() {
+            if (audio.paused) {
+                audio.play();
+                toggleButton.textContent = "🔊";
+            } else {
+                audio.pause();
+                toggleButton.textContent = "🔇";
+            }
+        });
+
+        volumeSlider.addEventListener("input", function() {
+            audio.volume = volumeSlider.value;
+        });
+    </script>
+</body>
+</html>
